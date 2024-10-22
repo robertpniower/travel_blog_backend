@@ -1,9 +1,11 @@
 const connection = require('../config/db');
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 
 class Utility {
-
     async userExists(email) {
-        const query = 'SELECT * drom users WHER email = ?';
+        const query = 'SELECT * FROM users WHERE email = ?';
         try {
             const [rows] = await connection.execute(query, [email]);
             return rows.length > 0;
@@ -11,7 +13,34 @@ class Utility {
             console.error('Error checking if user exists:', err);
             throw err;
         }
-    }
-}
+    };
 
-module.exports = Utility;;
+    async resizeImage(filePath, outputFileName, width, height) {
+        const outputDir = path.join(__dirname, '../uploads'); 
+
+        
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        const outputPath = path.join(outputDir, outputFileName);
+
+        try {
+            
+            if (filePath === outputPath) {
+                throw new Error("Input and output paths cannot be the same");
+            }
+
+           
+            await sharp(filePath)
+                .resize(width, height)
+                .toFile(outputPath);
+
+            return outputPath;
+        } catch (error) {
+            throw new Error(`Error resizing image: ${error.message}`);
+        }
+    }
+};
+
+module.exports = new Utility();
