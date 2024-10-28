@@ -1,5 +1,7 @@
 const connection = require('../config/db.js');
 
+const Utility = require('../utility/utility.js')
+
 
 
 class ArticleControlller {
@@ -42,6 +44,38 @@ class ArticleControlller {
             console.error(error);
             res.status(500).json({ error: 'Server error' });
         }
+    }
+
+    static async createArticle(req, res) {
+        const userId = 1;
+        const article_slug = await Utility.slugify(req.body.article_title);
+        const popst_slug = Utility.slugify(req.body.post_title);
+        const article_data = { article_title: req.body.title, article_content: req.body.content, article_slug, userId, countryId: req.body.countryId };
+    
+        const article_query = `INSERT INTO articles 
+                                (title, content, slug, published, published_at, created_at, updated_at, user_id, country_id)
+                                VALUES (?, ?, ?, 1, NOW(), NOW(), NOW(), 1, ?)`;
+        
+
+        let write_article_data = connection.query(article_query, article_data, (err, result) => {
+            if (err) throw err;
+            return result.insertId;
+            
+        })
+
+        const post_data = { article_id: write_article_data, post_titele: req.body.post_title, post_content: req.body.post_content, post_slug };
+
+        const post_query = `INSERT INTO posts (article_id, title, content, slug, created_at, updated_at)
+                            VALUES (?, ?, ?, ?, NOW(), NOW())`;
+
+        let write_post_data = connection.query(post_query, post_data, (err, result) => {
+            if (err) throw err;
+            return result.insertId;
+        });
+
+    
+
+
     }
 }
 

@@ -2,21 +2,11 @@ const express = require('express');
 const fs = require('fs');  // Add this line to import fs
 const path = require('path');
 const uploadMiddleware = require('../middleware/uploadMiddleware');
+const PictureController = require('../controllers/pictureController')
 
 const router = express.Router();
 
-router.post('/upload', uploadMiddleware, (req, res) => {
-    const files = req.files;
+router.post('/upload', uploadMiddleware, PictureController.uploadImages);
 
-    files.forEach((file) => {
-        const filePath = `uploads/${file.filename}`;
-        fs.rename(file.path, filePath, (err) => {
-            if (err) {
-                return res.status(500).json({ error: 'Failed to store the file' });
-            }
-        });
-    });
-    res.status(200).json({ message: 'File upload successful' });
-});
 
 module.exports = router;

@@ -16,9 +16,8 @@ class Utility {
     };
 
     async resizeImage(filePath, outputFileName, width, height) {
-        const outputDir = path.join(__dirname, '../uploads'); 
+        const outputDir = path.join(__dirname, '../uploads');
 
-        
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
@@ -26,12 +25,10 @@ class Utility {
         const outputPath = path.join(outputDir, outputFileName);
 
         try {
-            
             if (filePath === outputPath) {
                 throw new Error("Input and output paths cannot be the same");
             }
 
-           
             await sharp(filePath)
                 .resize(width, height)
                 .toFile(outputPath);
@@ -41,6 +38,24 @@ class Utility {
             throw new Error(`Error resizing image: ${error.message}`);
         }
     }
+
+    async getImageMetadata(imagePath) {
+        const metadata = await sharp(imagePath).metadata();
+        return {
+            width: metadata.width,
+            height: metadata.height,
+            format: metadata.format,
+        };
+    }
+
+    async slugify(str) {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim leading/trailing white space
+        str = str.toLowerCase(); // convert string to lowercase
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove any non-alphanumeric characters
+                 .replace(/\s+/g, '-') // replace spaces with hyphens
+                 .replace(/-+/g, '-'); // remove consecutive hyphens
+        return str;
+      }
 };
 
 module.exports = new Utility();
