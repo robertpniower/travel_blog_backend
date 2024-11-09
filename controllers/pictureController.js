@@ -18,11 +18,12 @@ class PictureController {
                         500,
                         500
                     );
-                    return resizedImagePath
+                    
                     console.log(resizedImagePath)
                     fs.unlink(file.path, (err) => {
                         if (err) console.error(`Failed to delete original file ${file.path}:`, err);
                     });
+                    return resizedImagePath
                 })
             );
 
