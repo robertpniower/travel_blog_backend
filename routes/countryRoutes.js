@@ -16,15 +16,4 @@ router.post('/create', async (req, res) => {
     }
 });
 
-router.get('/flags', async (req, res) => {
-    try {
-
-        const flags = await CountryController.getCountryFlags();
-
-        res.json(flags);
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-});
-
 module.exports = router;

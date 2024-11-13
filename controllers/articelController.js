@@ -20,6 +20,33 @@ class ArticleControlller {
         }
     }
 
+    static async getLatestArticles(req, res) {
+        try {
+            const query = `SELECT * FROM articles ORDER BY created_at DESC LIMIT 10`;
+            const [result] = await connection.query(query);
+
+            res.status(200).json(result);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error recieving Articles' });
+        }
+    }
+
+    static async getArticleByCountry(req, res) {
+        try {
+            const country_id = req.params.country_id
+            const query = `SELECT * FROM articles 
+                            WHERE country_id = ?`;
+            const [result] = await connection.query(query, country_id);
+
+            res.json(result)
+            console.log(result)
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error retrieving the article for country_id: {country_id}' });
+        }
+    }
+
     static async getArticleIcon(req, res) {
         try {
             const articleId = req.params.articleId;
