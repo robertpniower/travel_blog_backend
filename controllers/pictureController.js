@@ -4,6 +4,7 @@ const fs = require('fs');
 const Utility = require('../utility/utility');
 
 class PictureController {
+
     static async uploadImages(req, res) {
         try {
             if (!req.files || req.files.length === 0) {
@@ -19,23 +20,29 @@ class PictureController {
                         500
                     );
 
-                    console.log(resizedImagePath)
+                    console.log(resizedImagePath);
+
+                    // Generate the URL for the resized image
+                    const imageUrl = `http://localhost:8000/uploads/${resizedImagePath}`;
+
+                    // Delete the original file after resizing
                     fs.unlink(file.path, (err) => {
                         if (err) console.error(`Failed to delete original file ${file.path}:`, err);
                     });
 
-                    return resizedImagePath
+                    return imageUrl;
                 })
             );
 
             res.status(200).json({
                 message: 'Files uploaded and resized successfully',
-                resizedImages,
+                resizedImages, // Return the URLs of the resized images
             });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     }
+
 }
 
 module.exports = PictureController;

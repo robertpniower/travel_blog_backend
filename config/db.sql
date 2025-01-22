@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS articles (
     user_id INT(11) UNSIGNED,
     country_id INT(11) UNSIGNED,
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (country_id) REFERENCES countries(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (country_id) REFERENCES countries(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Posts Table (dependent on users, articles)
@@ -119,6 +119,24 @@ CREATE TABLE IF NOT EXISTS likes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (article_id) REFERENCES articles(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Icons Table
+CREATE TABLE IF NOT EXISTS icons (
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    url TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Category-Icon Association Table
+CREATE TABLE IF NOT EXISTS category_icons (
+    category_id INT(11) UNSIGNED NOT NULL,
+    icon_id INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY (category_id, icon_id),
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (icon_id) REFERENCES icons(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Post-Category Association Table (dependent on articles, categories)

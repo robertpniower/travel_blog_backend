@@ -15,7 +15,9 @@ class UserController {
 
         try {
             const [result] = await connection.execute(query, values);
+
             console.log('Inserted user with ID:', result.insertId);
+
             return result.insertId;
         } catch (err) {
             console.error('Error inserting user: ', err);
@@ -26,8 +28,10 @@ class UserController {
     // Get user by ID
     static async getUserById(id) {
         const query = `SELECT id, name, email, role, avatar_url FROM users WHERE id = ?`;
+
         try {
             const [rows] = await connection.execute(query, [id]);
+
             return rows[0];
         } catch (err) {
             console.error('Error fetching user: ', err);
@@ -38,8 +42,10 @@ class UserController {
     // Get all users with pagination support
     static async getAllUsers() {
         const query = `SELECT id, name, email, role, avatar_url FROM users`;
+
         try {
             const [rows] = await connection.execute(query);
+
             return rows;
         } catch (err) {
             console.error('Error fetching users: ', err);
@@ -54,8 +60,10 @@ class UserController {
         const values = [name, email, hashedPassword, role, avatar_url, id];
 
         try {
-            const [result] = await connection.execute(query, values);
+            const [result] = await connection.execute(query, values)
+
             console.log('Updated user with ID:', id);
+
             return result.affectedRows;
         } catch (err) {
             console.error('Error updating user: ', err);
@@ -66,9 +74,12 @@ class UserController {
     // Delete a user by ID
     static async deleteUser(id) {
         const query = `DELETE FROM users WHERE id = ?`;
+
         try {
             const [result] = await connection.execute(query, [id]);
+
             console.log('Deleted user with ID:', id);
+
             return result.affectedRows;
         } catch (err) {
             console.error('Error deleting user: ', err);
