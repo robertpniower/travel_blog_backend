@@ -40,7 +40,6 @@ class ArticleControlller {
             const [result] = await connection.query(query, country_id);
 
             res.json(result)
-            console.log(result)
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error retrieving the article for country_id: {country_id}' });
@@ -57,6 +56,8 @@ class ArticleControlller {
                             LEFT JOIN icons ON category_icons.icon_id = icons.id
                             WHERE articles.id = ?`;
             const [result] = await connection.query(query, [articleId]);
+
+            //console.log(result);
 
             if (result.length === 0) {
                 return res.status(404).json({ message: `No icons found for article with id: {articleId}` });

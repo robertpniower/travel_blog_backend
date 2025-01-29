@@ -25,6 +25,22 @@ class CategoryController {
             throw err;
         }
     }
+
+    static async updateCategory(id, title, content) {
+        const query = 'UPDATE categories SET title = ?, content = ?, updated_at = NOW() WHERE id = ?';
+        const values = [title, content, id];
+
+        try {
+            const [result] = await connection.execute(query, values);
+
+            console.log(`Updated category with ID: `, id);
+
+            return result.affectedRows;
+        } catch (err) {
+            console.error('Error updating category: ', err);
+            throw err;
+        }
+    }
 }
 
 module.exports = CategoryController;
